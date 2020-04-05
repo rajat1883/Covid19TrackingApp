@@ -47,7 +47,7 @@ export class AppComponent {
   }
 
   searchCountry(country: string): boolean {
-    if (!this.searchText || country.toLowerCase().indexOf(this.searchText) > -1) {
+    if (!this.searchText || country.toLowerCase().indexOf(this.searchText.toLowerCase()) > -1) {
       this.chartVisible = true;
     }
     else {
