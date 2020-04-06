@@ -29,3 +29,11 @@
   .table-hover tbody tr:hover > td.info {
     background-color: #c4e3f3 !important;
   }
+
+  .chart {
+    height: 200px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }

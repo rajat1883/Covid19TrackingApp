@@ -1,7 +1,7 @@
-<div style="text-align: center; font-size: 5em; font-weight: bold;">Coronavirus Tracker</div>
+<div style="text-align: center; font-size: 4em; font-weight: bold;">COVID-19 Tracker</div>
 
 <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off"
- placeholder="&#61442;  Start searching by name of country">
+  placeholder="&#61442;  Start searching by name of country">
 
 <table class="table table-hover">
   <thead class="thead-dark">
@@ -18,19 +18,26 @@
 
   <tbody *ngFor="let country of countryNames">
 
-    <tr (click)="createChart(country)" *ngIf="searchCountry(country)" data-toggle="collapse" id="row1" [attr.data-target]="'#' + country">
+    <tr (click)="createChart(country)" *ngIf="searchCountry(country)" data-toggle="collapse" id="row1"
+      [attr.data-target]="'#' + country">
       <td><a href="#">{{country}}</a></td>
       <td class="warning">{{coronavirusData[country][this.coronavirusLatestDataIndex].confirmed}}</td>
       <td class="error">{{coronavirusData[country][this.coronavirusLatestDataIndex].deaths}}</td>
       <td class="success">{{coronavirusData[country][this.coronavirusLatestDataIndex].recovered}}</td>
-      <td class="success">{{coronavirusData[country][this.coronavirusLatestDataIndex].deaths/coronavirusData[country][this.coronavirusLatestDataIndex].confirmed}}</td>
+      <td class="error">
+        {{(coronavirusData[country][this.coronavirusLatestDataIndex].deaths/coronavirusData[country][this.coronavirusLatestDataIndex].confirmed*100).toFixed(2) + '%'}}
+      </td>
     </tr>
 
     <tr *ngIf="chartVisible" class="collapse" id="{{country}}">
-      <div style="height: 200px;">
-        <canvas id="coronaLineChart{{country}}" width="200" height="200"></canvas>
-      </div>
-  </tr>
-  
+      <td colspan="5">
+        <div class="chart">
+          <canvas id="barCoronaLineChart{{country}}" width="200" height="200"></canvas>
+          <canvas id="lineCoronaLineChart{{country}}" width="200" height="200"></canvas>
+          <canvas id="doughnutCoronaLineChart{{country}}" width="200" height="200"></canvas>
+        </div>
+      </td>
+    </tr>
+
   </tbody>
 </table>
