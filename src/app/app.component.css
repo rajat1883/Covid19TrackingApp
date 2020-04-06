@@ -37,3 +37,9 @@
     justify-content: space-evenly;
     align-items: center;
   }
+
+  .heading {
+    text-align: center;
+    font-size: 4em;
+    font-weight: bold;
+  }

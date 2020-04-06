@@ -23,6 +23,7 @@ export class AppComponent {
   chartData: number[];
   chartVisible: boolean;
   last5DayData: SingleDayData[];
+  chartTracker: Array<string>;
 
   private readonly chartBackgroundColor = [
     'rgba(255, 99, 132, 1)',
@@ -33,6 +34,7 @@ export class AppComponent {
   ];
 
   constructor(private coronavirusService: CoronavirusService) {
+    this.chartTracker = new Array<string>();
     this.getCoronavirusData();
   }
 
@@ -63,6 +65,13 @@ export class AppComponent {
   }
 
   createChart(countryName: string) {
+    if (this.chartTracker.indexOf(countryName) > -1) {
+      return;
+    }
+    else {
+      this.chartTracker.push(countryName);
+    }
+
     this.createSpecificChart(countryName, 'bar');
     this.createSpecificChart(countryName, 'line');
     this.createSpecificChart(countryName, 'doughnut');

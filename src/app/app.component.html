@@ -1,4 +1,4 @@
-<div style="text-align: center; font-size: 4em; font-weight: bold;"><img src="./assets/Capture.jpg" alt="COVID-19 TRACKING"/></div>
+<div class="heading"><img src="./assets/Capture.jpg" alt="COVID-19 TRACKING"/></div>
 
 <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off"
   placeholder="&#61442;  Start searching by name of country">
@@ -18,7 +18,7 @@
 
   <tbody *ngFor="let country of countryNames">
 
-    <tr (click)="createChart(country)" *ngIf="searchCountry(country)" data-toggle="collapse" id="row1"
+    <tr (click)="createChart(country)" *ngIf="searchCountry(country)" data-toggle="collapse" id="row{{country}}"
       [attr.data-target]="'#' + country">
       <td><a href="#">{{country}}</a></td>
       <td class="warning">{{coronavirusData[country][this.coronavirusLatestDataIndex].confirmed}}</td>
