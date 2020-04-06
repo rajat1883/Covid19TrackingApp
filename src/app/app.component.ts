@@ -27,7 +27,9 @@ export class AppComponent {
   private readonly chartBackgroundColor = [
     'rgba(255, 99, 132, 1)',
     'rgba(250, 226, 105, 1)',
-    'rgba(149, 230, 117, 1)'
+    'rgba(149, 230, 117, 1)',
+    'rgba(89, 145, 200, 1)',
+    'rgba(132, 132, 132, 1)',
   ];
 
   constructor(private coronavirusService: CoronavirusService) {
@@ -67,13 +69,11 @@ export class AppComponent {
   }
 
   private createSpecificChart(countryName: string, typeOfChart: string) {
-    if (typeOfChart === 'bar' || typeOfChart === 'line')
-    {
-    this.formatCountryDataForChart(countryName);
+    if (typeOfChart === 'bar' || typeOfChart === 'line') {
+      this.formatCountryDataForChart(countryName);
     }
-    else
-    {
-    this.formatCountryDataForDoghnutChart(countryName);
+    else {
+      this.formatCountryDataForDoghnutChart(countryName);
     }
     this.canvas = document.getElementById(typeOfChart + 'CoronaLineChart' + countryName);
     this.ctx = this.canvas.getContext('2d');
@@ -85,12 +85,16 @@ export class AppComponent {
           label: 'Total cases in ' + countryName,
           data: this.chartData,
           backgroundColor: this.chartBackgroundColor,
+          fill: false,
           borderWidth: 1
         }]
       },
       options: {
         responsive: false,
-        display: true
+        display: true,
+        legend: {
+          align: 'start'
+        }
       }
     });
   }
