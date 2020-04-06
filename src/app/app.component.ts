@@ -19,26 +19,30 @@ export class AppComponent {
   ctx: any;
   chart: any;
   canvas: any;
-  labels: string[];
-  data: number[];
+  chartLabels: string[];
+  chartData: number[];
   chartVisible: boolean;
+  last5DayData: SingleDayData[];
+
+  private readonly chartBackgroundColor = [
+    'rgba(255, 99, 132, 1)',
+    'rgba(250, 226, 105, 1)',
+    'rgba(149, 230, 117, 1)'
+  ];
 
   constructor(private coronavirusService: CoronavirusService) {
-    this.labels = ['New', 'In Progress', 'On Hold'];
-    this.data = [1, 2, 3];
     this.getCoronavirusData();
   }
 
   getCoronavirusData(): void {
     this.coronavirusService.getCoronavirusData().subscribe((coronavirusData: CountryData[]) => {
       this.coronavirusData = coronavirusData;
-      this.getCoronavirusDataDays();
+      this.getIndexOfLatestCoronavirusData();
       this.getCountryNames();
     });
   }
 
-
-  private getCoronavirusDataDays() {
+  private getIndexOfLatestCoronavirusData() {
     this.coronavirusLatestDataIndex = (this.coronavirusData['Albania'] as SingleDayData[]).length - 1;
   }
 
@@ -51,34 +55,70 @@ export class AppComponent {
       this.chartVisible = true;
     }
     else {
-      this.chartVisible =  false;
+      this.chartVisible = false;
     }
     return this.chartVisible;
   }
 
   createChart(countryName: string) {
-    this.canvas = document.getElementById('coronaLineChart' + countryName);
+    this.createSpecificChart(countryName, 'bar');
+    this.createSpecificChart(countryName, 'line');
+    this.createSpecificChart(countryName, 'doughnut');
+  }
+
+  private createSpecificChart(countryName: string, typeOfChart: string) {
+    if (typeOfChart === 'bar' || typeOfChart === 'line')
+    {
+    this.formatCountryDataForChart(countryName);
+    }
+    else
+    {
+    this.formatCountryDataForDoghnutChart(countryName);
+    }
+    this.canvas = document.getElementById(typeOfChart + 'CoronaLineChart' + countryName);
     this.ctx = this.canvas.getContext('2d');
     this.chart = new Chart(this.ctx, {
-      type: 'bar',
+      type: typeOfChart,
       data: {
-          labels: this.labels,
-          datasets: [{
-              label: '# of Votes',
-              data: this.data,
-              backgroundColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)'
-              ],
-              borderWidth: 1
-          }]
+        labels: this.chartLabels,
+        datasets: [{
+          label: 'Total cases in ' + countryName,
+          data: this.chartData,
+          backgroundColor: this.chartBackgroundColor,
+          borderWidth: 1
+        }]
       },
       options: {
         responsive: false,
         display: true
       }
     });
+  }
+
+  formatCountryDataForChart(countryName: string) {
+    this.chartLabels = [];
+    this.chartData = [];
+    this.last5DayData = (this.coronavirusData[countryName] as SingleDayData[]).slice(1).slice(-5);
+    this.last5DayData.forEach((singleDayData: SingleDayData) => {
+      this.chartLabels.push(singleDayData.date);
+    });
+
+    this.last5DayData.forEach((singleDayData: SingleDayData) => {
+      this.chartData.push(singleDayData.deaths);
+    });
+  }
+
+  formatCountryDataForDoghnutChart(countryName: string) {
+    this.chartLabels = [];
+    this.chartData = [];
+
+    this.chartLabels.push('Deaths');
+    this.chartLabels.push('Confirmed');
+    this.chartLabels.push('Recovered');
+
+    this.chartData.push((this.coronavirusData[countryName][this.coronavirusLatestDataIndex] as SingleDayData).deaths);
+    this.chartData.push((this.coronavirusData[countryName][this.coronavirusLatestDataIndex] as SingleDayData).confirmed);
+    this.chartData.push((this.coronavirusData[countryName][this.coronavirusLatestDataIndex] as SingleDayData).recovered);
   }
 
 }
