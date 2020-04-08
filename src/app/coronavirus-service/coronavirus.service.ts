@@ -6,9 +6,12 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CoronavirusService {
 
+  private readonly coronaVirusApiUrl = 'https://pomber.github.io/covid19/timeseries.json';
+
   constructor(private http: HttpClient) { }
 
   getCoronavirusData() {
-    return this.http.get('https://pomber.github.io/covid19/timeseries.json');
+    return this.http.get(this.coronaVirusApiUrl);
   }
+
 }

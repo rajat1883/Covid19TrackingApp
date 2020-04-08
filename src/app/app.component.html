@@ -16,10 +16,10 @@
 
   </thead>
 
-  <tbody *ngFor="let country of countryNames">
+  <tbody *ngFor="let country of countryNames; let i = index">
 
-    <tr (click)="createChart(country)" *ngIf="searchCountry(country)" data-toggle="collapse" id="row{{country}}"
-      [attr.data-target]="'#' + country">
+    <tr (click)="createCharts(country)" *ngIf="searchCountry(country)" data-toggle="collapse" id="countryRow{{i}}"
+      [attr.data-target]="'#chartId' + i">
       <td><a href="#">{{country}}</a></td>
       <td class="warning">{{coronavirusData[country][this.coronavirusLatestDataIndex].confirmed}}</td>
       <td class="error">{{coronavirusData[country][this.coronavirusLatestDataIndex].deaths}}</td>
@@ -29,7 +29,7 @@
       </td>
     </tr>
 
-    <tr *ngIf="chartVisible" class="collapse" id="{{country}}">
+    <tr *ngIf="chartVisible" class="collapse" id="{{'chartId' + i}}">
       <td colspan="5">
         <div class="chart">
           <canvas id="barCoronaLineChart{{country}}" width="200" height="200"></canvas>
